@@ -1,17 +1,23 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.10
+-- version 3.5.8.2
 -- http://www.phpmyadmin.net
 --
--- Host: localhost:8889
--- Generation Time: Feb 25, 2015 at 05:54 AM
--- Server version: 5.5.38
--- PHP Version: 5.6.2
+-- Host: localhost
+-- Generation Time: Mar 08, 2015 at 10:05 PM
+-- Server version: 5.5.41-37.0-log
+-- PHP Version: 5.4.23
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
 --
--- Database: `sanctuary`
+-- Database: `emilyeca_sanctuary`
 --
 
 -- --------------------------------------------------------
@@ -20,12 +26,16 @@ SET time_zone = "+00:00";
 -- Table structure for table `sanctuarycommentmeta`
 --
 
-CREATE TABLE `sanctuarycommentmeta` (
-`meta_id` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuarycommentmeta`;
+CREATE TABLE IF NOT EXISTS `sanctuarycommentmeta` (
+  `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `comment_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `meta_value` longtext,
+  PRIMARY KEY (`meta_id`),
+  KEY `comment_id` (`comment_id`),
+  KEY `meta_key` (`meta_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -33,8 +43,9 @@ CREATE TABLE `sanctuarycommentmeta` (
 -- Table structure for table `sanctuarycomments`
 --
 
-CREATE TABLE `sanctuarycomments` (
-`comment_ID` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuarycomments`;
+CREATE TABLE IF NOT EXISTS `sanctuarycomments` (
+  `comment_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `comment_post_ID` bigint(20) unsigned NOT NULL DEFAULT '0',
   `comment_author` tinytext NOT NULL,
   `comment_author_email` varchar(100) NOT NULL DEFAULT '',
@@ -48,8 +59,14 @@ CREATE TABLE `sanctuarycomments` (
   `comment_agent` varchar(255) NOT NULL DEFAULT '',
   `comment_type` varchar(20) NOT NULL DEFAULT '',
   `comment_parent` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `user_id` bigint(20) unsigned NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`comment_ID`),
+  KEY `comment_post_ID` (`comment_post_ID`),
+  KEY `comment_approved_date_gmt` (`comment_approved`,`comment_date_gmt`),
+  KEY `comment_date_gmt` (`comment_date_gmt`),
+  KEY `comment_parent` (`comment_parent`),
+  KEY `comment_author_email` (`comment_author_email`(10))
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `sanctuarycomments`
@@ -64,8 +81,9 @@ INSERT INTO `sanctuarycomments` (`comment_ID`, `comment_post_ID`, `comment_autho
 -- Table structure for table `sanctuarylinks`
 --
 
-CREATE TABLE `sanctuarylinks` (
-`link_id` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuarylinks`;
+CREATE TABLE IF NOT EXISTS `sanctuarylinks` (
+  `link_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `link_url` varchar(255) NOT NULL DEFAULT '',
   `link_name` varchar(255) NOT NULL DEFAULT '',
   `link_image` varchar(255) NOT NULL DEFAULT '',
@@ -77,8 +95,10 @@ CREATE TABLE `sanctuarylinks` (
   `link_updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `link_rel` varchar(255) NOT NULL DEFAULT '',
   `link_notes` mediumtext NOT NULL,
-  `link_rss` varchar(255) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `link_rss` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`link_id`),
+  KEY `link_visible` (`link_visible`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -86,12 +106,15 @@ CREATE TABLE `sanctuarylinks` (
 -- Table structure for table `sanctuaryoptions`
 --
 
-CREATE TABLE `sanctuaryoptions` (
-`option_id` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuaryoptions`;
+CREATE TABLE IF NOT EXISTS `sanctuaryoptions` (
+  `option_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `option_name` varchar(64) NOT NULL DEFAULT '',
   `option_value` longtext NOT NULL,
-  `autoload` varchar(20) NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8;
+  `autoload` varchar(20) NOT NULL DEFAULT 'yes',
+  PRIMARY KEY (`option_id`),
+  UNIQUE KEY `option_name` (`option_name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=132 ;
 
 --
 -- Dumping data for table `sanctuaryoptions`
@@ -234,12 +257,16 @@ INSERT INTO `sanctuaryoptions` (`option_id`, `option_name`, `option_value`, `aut
 -- Table structure for table `sanctuarypostmeta`
 --
 
-CREATE TABLE `sanctuarypostmeta` (
-`meta_id` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuarypostmeta`;
+CREATE TABLE IF NOT EXISTS `sanctuarypostmeta` (
+  `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `post_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `meta_value` longtext,
+  PRIMARY KEY (`meta_id`),
+  KEY `post_id` (`post_id`),
+  KEY `meta_key` (`meta_key`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `sanctuarypostmeta`
@@ -254,8 +281,9 @@ INSERT INTO `sanctuarypostmeta` (`meta_id`, `post_id`, `meta_key`, `meta_value`)
 -- Table structure for table `sanctuaryposts`
 --
 
-CREATE TABLE `sanctuaryposts` (
-`ID` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuaryposts`;
+CREATE TABLE IF NOT EXISTS `sanctuaryposts` (
+  `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `post_author` bigint(20) unsigned NOT NULL DEFAULT '0',
   `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `post_date_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -277,8 +305,13 @@ CREATE TABLE `sanctuaryposts` (
   `menu_order` int(11) NOT NULL DEFAULT '0',
   `post_type` varchar(20) NOT NULL DEFAULT 'post',
   `post_mime_type` varchar(100) NOT NULL DEFAULT '',
-  `comment_count` bigint(20) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+  `comment_count` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `post_name` (`post_name`),
+  KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`),
+  KEY `post_parent` (`post_parent`),
+  KEY `post_author` (`post_author`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `sanctuaryposts`
@@ -296,12 +329,16 @@ INSERT INTO `sanctuaryposts` (`ID`, `post_author`, `post_date`, `post_date_gmt`,
 -- Table structure for table `sanctuaryterms`
 --
 
-CREATE TABLE `sanctuaryterms` (
-`term_id` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuaryterms`;
+CREATE TABLE IF NOT EXISTS `sanctuaryterms` (
+  `term_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL DEFAULT '',
   `slug` varchar(200) NOT NULL DEFAULT '',
-  `term_group` bigint(10) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `term_group` bigint(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`term_id`),
+  KEY `slug` (`slug`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `sanctuaryterms`
@@ -316,10 +353,13 @@ INSERT INTO `sanctuaryterms` (`term_id`, `name`, `slug`, `term_group`) VALUES
 -- Table structure for table `sanctuaryterm_relationships`
 --
 
-CREATE TABLE `sanctuaryterm_relationships` (
+DROP TABLE IF EXISTS `sanctuaryterm_relationships`;
+CREATE TABLE IF NOT EXISTS `sanctuaryterm_relationships` (
   `object_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `term_taxonomy_id` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `term_order` int(11) NOT NULL DEFAULT '0'
+  `term_order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`object_id`,`term_taxonomy_id`),
+  KEY `term_taxonomy_id` (`term_taxonomy_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -335,14 +375,18 @@ INSERT INTO `sanctuaryterm_relationships` (`object_id`, `term_taxonomy_id`, `ter
 -- Table structure for table `sanctuaryterm_taxonomy`
 --
 
-CREATE TABLE `sanctuaryterm_taxonomy` (
-`term_taxonomy_id` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuaryterm_taxonomy`;
+CREATE TABLE IF NOT EXISTS `sanctuaryterm_taxonomy` (
+  `term_taxonomy_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `term_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `taxonomy` varchar(32) NOT NULL DEFAULT '',
   `description` longtext NOT NULL,
   `parent` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `count` bigint(20) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `count` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`term_taxonomy_id`),
+  UNIQUE KEY `term_id_taxonomy` (`term_id`,`taxonomy`),
+  KEY `taxonomy` (`taxonomy`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `sanctuaryterm_taxonomy`
@@ -357,12 +401,16 @@ INSERT INTO `sanctuaryterm_taxonomy` (`term_taxonomy_id`, `term_id`, `taxonomy`,
 -- Table structure for table `sanctuaryusermeta`
 --
 
-CREATE TABLE `sanctuaryusermeta` (
-`umeta_id` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuaryusermeta`;
+CREATE TABLE IF NOT EXISTS `sanctuaryusermeta` (
+  `umeta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+  `meta_value` longtext,
+  PRIMARY KEY (`umeta_id`),
+  KEY `user_id` (`user_id`),
+  KEY `meta_key` (`meta_key`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `sanctuaryusermeta`
@@ -393,8 +441,9 @@ INSERT INTO `sanctuaryusermeta` (`umeta_id`, `user_id`, `meta_key`, `meta_value`
 -- Table structure for table `sanctuaryusers`
 --
 
-CREATE TABLE `sanctuaryusers` (
-`ID` bigint(20) unsigned NOT NULL,
+DROP TABLE IF EXISTS `sanctuaryusers`;
+CREATE TABLE IF NOT EXISTS `sanctuaryusers` (
+  `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `user_login` varchar(60) NOT NULL DEFAULT '',
   `user_pass` varchar(64) NOT NULL DEFAULT '',
   `user_nicename` varchar(50) NOT NULL DEFAULT '',
@@ -403,8 +452,11 @@ CREATE TABLE `sanctuaryusers` (
   `user_registered` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `user_activation_key` varchar(60) NOT NULL DEFAULT '',
   `user_status` int(11) NOT NULL DEFAULT '0',
-  `display_name` varchar(250) NOT NULL DEFAULT ''
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `display_name` varchar(250) NOT NULL DEFAULT '',
+  PRIMARY KEY (`ID`),
+  KEY `user_login_key` (`user_login`),
+  KEY `user_nicename` (`user_nicename`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `sanctuaryusers`
@@ -413,127 +465,6 @@ CREATE TABLE `sanctuaryusers` (
 INSERT INTO `sanctuaryusers` (`ID`, `user_login`, `user_pass`, `user_nicename`, `user_email`, `user_url`, `user_registered`, `user_activation_key`, `user_status`, `display_name`) VALUES
 (1, 'emilyecarey', '$P$BtG04OSfv7bzItlSpl.EA0WmVGGUG51', 'emilyecarey', 'emilyelainecarey@gmail.com', '', '2015-02-25 03:09:06', '', 0, 'emilyecarey');
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `sanctuarycommentmeta`
---
-ALTER TABLE `sanctuarycommentmeta`
- ADD PRIMARY KEY (`meta_id`), ADD KEY `comment_id` (`comment_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `sanctuarycomments`
---
-ALTER TABLE `sanctuarycomments`
- ADD PRIMARY KEY (`comment_ID`), ADD KEY `comment_post_ID` (`comment_post_ID`), ADD KEY `comment_approved_date_gmt` (`comment_approved`,`comment_date_gmt`), ADD KEY `comment_date_gmt` (`comment_date_gmt`), ADD KEY `comment_parent` (`comment_parent`), ADD KEY `comment_author_email` (`comment_author_email`(10));
-
---
--- Indexes for table `sanctuarylinks`
---
-ALTER TABLE `sanctuarylinks`
- ADD PRIMARY KEY (`link_id`), ADD KEY `link_visible` (`link_visible`);
-
---
--- Indexes for table `sanctuaryoptions`
---
-ALTER TABLE `sanctuaryoptions`
- ADD PRIMARY KEY (`option_id`), ADD UNIQUE KEY `option_name` (`option_name`);
-
---
--- Indexes for table `sanctuarypostmeta`
---
-ALTER TABLE `sanctuarypostmeta`
- ADD PRIMARY KEY (`meta_id`), ADD KEY `post_id` (`post_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `sanctuaryposts`
---
-ALTER TABLE `sanctuaryposts`
- ADD PRIMARY KEY (`ID`), ADD KEY `post_name` (`post_name`), ADD KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`), ADD KEY `post_parent` (`post_parent`), ADD KEY `post_author` (`post_author`);
-
---
--- Indexes for table `sanctuaryterms`
---
-ALTER TABLE `sanctuaryterms`
- ADD PRIMARY KEY (`term_id`), ADD KEY `slug` (`slug`), ADD KEY `name` (`name`);
-
---
--- Indexes for table `sanctuaryterm_relationships`
---
-ALTER TABLE `sanctuaryterm_relationships`
- ADD PRIMARY KEY (`object_id`,`term_taxonomy_id`), ADD KEY `term_taxonomy_id` (`term_taxonomy_id`);
-
---
--- Indexes for table `sanctuaryterm_taxonomy`
---
-ALTER TABLE `sanctuaryterm_taxonomy`
- ADD PRIMARY KEY (`term_taxonomy_id`), ADD UNIQUE KEY `term_id_taxonomy` (`term_id`,`taxonomy`), ADD KEY `taxonomy` (`taxonomy`);
-
---
--- Indexes for table `sanctuaryusermeta`
---
-ALTER TABLE `sanctuaryusermeta`
- ADD PRIMARY KEY (`umeta_id`), ADD KEY `user_id` (`user_id`), ADD KEY `meta_key` (`meta_key`);
-
---
--- Indexes for table `sanctuaryusers`
---
-ALTER TABLE `sanctuaryusers`
- ADD PRIMARY KEY (`ID`), ADD KEY `user_login_key` (`user_login`), ADD KEY `user_nicename` (`user_nicename`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `sanctuarycommentmeta`
---
-ALTER TABLE `sanctuarycommentmeta`
-MODIFY `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `sanctuarycomments`
---
-ALTER TABLE `sanctuarycomments`
-MODIFY `comment_ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `sanctuarylinks`
---
-ALTER TABLE `sanctuarylinks`
-MODIFY `link_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `sanctuaryoptions`
---
-ALTER TABLE `sanctuaryoptions`
-MODIFY `option_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=132;
---
--- AUTO_INCREMENT for table `sanctuarypostmeta`
---
-ALTER TABLE `sanctuarypostmeta`
-MODIFY `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `sanctuaryposts`
---
-ALTER TABLE `sanctuaryposts`
-MODIFY `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
---
--- AUTO_INCREMENT for table `sanctuaryterms`
---
-ALTER TABLE `sanctuaryterms`
-MODIFY `term_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `sanctuaryterm_taxonomy`
---
-ALTER TABLE `sanctuaryterm_taxonomy`
-MODIFY `term_taxonomy_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `sanctuaryusermeta`
---
-ALTER TABLE `sanctuaryusermeta`
-MODIFY `umeta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
---
--- AUTO_INCREMENT for table `sanctuaryusers`
---
-ALTER TABLE `sanctuaryusers`
-MODIFY `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
